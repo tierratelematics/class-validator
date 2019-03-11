@@ -260,7 +260,13 @@ export class ValidationExecutor {
 
         metadatas.forEach(metadata => {
             if (metadata.type !== ValidationTypes.NESTED_VALIDATION) return;
-            const targetSchema = typeof metadata.target === "string" ? metadata.target as string : undefined;
+
+            let targetSchema: string = undefined;
+            if (metadata.constraints && metadata.constraints[0] && typeof metadata.constraints[0] === "string") {
+                targetSchema = metadata.constraints[0];
+            } else if (typeof metadata.target === "string") {
+                targetSchema = metadata.target;
+            }
 
             if (value instanceof Array) {
                 value.forEach((subValue: any, index: number) => {
